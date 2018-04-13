@@ -1,0 +1,6 @@
+- What is fixtures-git?
+
+It is a small library that can be used with fixtures
+(https://pypi.python.org/pypi/fixtures) to quickly build git
+repositories from a list defined in python (typically loaded from a
+yaml file) to be used to test behaviour of python tools that use git.
