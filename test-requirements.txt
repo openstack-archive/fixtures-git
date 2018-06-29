@@ -1,1 +1,5 @@
-sphinx
+flake8
+hacking
+sphinx>=1.6.5
+stestr>=1.0.0
+testtools>=2.2.0
