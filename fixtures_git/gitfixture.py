@@ -23,6 +23,11 @@ import git
 
 from fixtures_git import utils
 
+try:
+    import urlparse as parse
+except ImportError:
+    from urllib import parse
+
 
 class GitTree(object):
     """Helper class to build a git repository from a graph definition
@@ -284,3 +289,33 @@ class GitFixture(fixtures.Fixture):
         for x in range(num):
             self._create_file_commit(
                 change_id=ids[x], message_prefix=message_prefix)
+
+
+class GitCloneFixture(fixtures.Fixture):
+    def __init__(self, repo_url, username=None, password=None, directory=None):
+        self.username = username
+        self.password = password
+        self.repo_url = repo_url
+        self.directory = directory
+
+    def _setUp(self):
+        if self.directory is None:
+            self.directory = self.useFixture(fixtures.TempDir()).path
+
+        project = self.repo_url.rstrip('/').split('/')[-1]
+        if project.endswith('.git'):
+            project = project[:-4]
+
+        clone_dir = os.path.join(self.directory, project)
+        if os.path.exists(clone_dir):
+            shutil.rmtree(clone_dir)
+
+        self.repo = git.Repo.clone_from(url=self.repo_url, to_path=clone_dir)
+        url_parts = list(parse.urlparse(self.repo_url))
+        if self.username is not None:
+            auth = ":".join(filter(None, (self.username, self.password)))
+            netloc = "@".join(filter(None, (auth, url_parts[1])))
+            url_parts[1] = netloc
+        joined_url = parse.urlunparse(url_parts)
+        origin = self.repo.remotes.origin
+        origin.set_url(joined_url)
