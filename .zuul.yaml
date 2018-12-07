@@ -8,3 +8,5 @@
       jobs:
         - build-openstack-sphinx-docs:
             voting: false
+        - requirements-check:
+            voting: false
