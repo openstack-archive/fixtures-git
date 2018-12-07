@@ -12,8 +12,6 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import random
-import string
 import time
 import uuid
 
@@ -67,13 +65,15 @@ class GithubRepoFixture(GithubLoginMixin, fixtures.Fixture):
 
     def _setUp(self):
 
-        # handle template_name missing 'XXXXX' result in it containing
-        # a single element so set suffix to '' in that case.
-        template_parts = iter(self.name_template.split('XXXXXX'))
-        prefix = next(template_parts)
-        suffix = next(template_parts, '')
+        # allow user to provide an exact name to use
+        if self.repo_name is None:
+            # handle template_name missing 'XXXXX' result in it containing
+            # a single element so set suffix to '' in that case.
+            template_parts = iter(self.name_template.split('XXXXXX'))
+            prefix = next(template_parts)
+            suffix = next(template_parts, '')
 
-        self.repo_name = ''.join([prefix, str(uuid.uuid4())[:8], suffix])
+            self.repo_name = ''.join([prefix, str(uuid.uuid4())[:8], suffix])
 
         self.addCleanup(self._delete_repo)
 
