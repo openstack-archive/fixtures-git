@@ -27,29 +27,38 @@ except ImportError:
 TEST_REPO_DESC = "########## Auto-generated test repository ##########"
 
 
-class GithubRepoFixture(fixtures.Fixture):
+class GithubLoginMixin(object):
+
+    def login(self, token, url=None):
+
+        if url is None:
+            url = "https://github.com"
+
+        if parse.urlparse(url).netloc == "github.com":
+            self.github = github.login(token=token)
+        else:
+            self.github = github.enterprise_login(token=token, url=url)
+
+
+class GithubRepoFixture(GithubLoginMixin, fixtures.Fixture):
     """
     Fixture to create a new repo in GitHub and remove once finished.
     """
 
     default_repo_name_template = 'workflow-test-XXXXXX'
 
-    def __init__(self, owner, token, url="https://github.com",
-                 name_template=None):
+    def __init__(self, owner, token, url=None, name_template=None):
 
         super(GithubRepoFixture, self).__init__()
 
         self.owner = owner
-        self.token = token
         self.name_template = name_template or self.default_repo_name_template
 
         self.repo = None
         self.repo_name = None
-        if parse.urlparse(url).netloc == "github.com":
-            github_login = github.login
-        else:
-            github_login = github.enterprise_login
-        self.github = github_login(token=token, url=url)
+
+        # use GithubLoginMixin
+        self.login(token, url)
 
         # try an auth'ed request to make sure we have a valid token
         # note this requires the token to have read on user
@@ -85,24 +94,21 @@ class GithubRepoFixture(fixtures.Fixture):
                 repo.delete()
 
 
-class GithubForkedRepoFixture(fixtures.Fixture):
+class GithubForkedRepoFixture(GithubLoginMixin, fixtures.Fixture):
     """
     Fixture to create and delete a fork of the given repo in the
     default GitHub org of the token user
     """
-    def __init__(self, src_repo, token, url="https://github.com"):
+    def __init__(self, src_repo, token, url=None):
 
         super(GithubForkedRepoFixture, self).__init__()
 
         self.src_repo = src_repo
-        self.token = token
 
         self.repo = None
-        if parse.urlparse(url).netloc == "github.com":
-            github_login = github.login
-        else:
-            github_login = github.enterprise_login
-        self.github = github_login(token=token, url=url)
+
+        # use GithubLoginMixin
+        self.login(token, url)
 
         # try an auth'ed request to make sure we have a valid token
         # note this requires the token to have read on user
