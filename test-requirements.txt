@@ -1,5 +1,7 @@
 flake8
+github3.py
 hacking
+mock
 sphinx>=1.6.5
 stestr>=1.0.0
 testtools>=2.2.0

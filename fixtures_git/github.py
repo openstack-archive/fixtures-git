@@ -12,8 +12,9 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import os
-import tempfile
+import itertools
+import random
+import string
 import time
 
 import fixtures
@@ -35,9 +36,9 @@ class GithubLoginMixin(object):
             url = "https://github.com"
 
         if parse.urlparse(url).netloc == "github.com":
-            self.github = github.login(token=token)
+            return github.login(token=token)
         else:
-            self.github = github.enterprise_login(token=token, url=url)
+            return github.enterprise_login(token=token, url=url)
 
 
 class GithubRepoFixture(GithubLoginMixin, fixtures.Fixture):
@@ -58,21 +59,28 @@ class GithubRepoFixture(GithubLoginMixin, fixtures.Fixture):
         self.repo_name = None
 
         # use GithubLoginMixin
-        self.login(token, url)
+        self.github = self.login(token, url)
 
         # try an auth'ed request to make sure we have a valid token
         # note this requires the token to have read on user
         self.me = self.github.me()
 
     def _setUp(self):
-        template_parts = self.name_template.split('XXXXXX')
-        prefix = template_parts[0]
-        suffix = template_parts[-1]
-        tfile = tempfile.NamedTemporaryFile(
-            suffix=suffix, prefix=prefix, delete=False)
-        self.addCleanup(os.remove, tfile.name)
 
-        self.repo_name = os.path.basename(tfile.name)
+        # handle template_name missing 'XXXXX' result in it containing
+        # a single element so set suffix to '' in that case.
+        template_parts = iter(self.name_template.split('XXXXXX'))
+        prefix = next(template_parts)
+        suffix = next(template_parts, '')
+
+        self.repo_name = ''.join(
+            itertools.chain(
+                prefix,
+                (random.choice(string.ascii_uppercase + string.digits)
+                 for _ in range(8)),
+                suffix
+            )
+        )
 
         self.addCleanup(self._delete_repo)
 
@@ -108,7 +116,7 @@ class GithubForkedRepoFixture(GithubLoginMixin, fixtures.Fixture):
         self.repo = None
 
         # use GithubLoginMixin
-        self.login(token, url)
+        self.github = self.login(token, url)
 
         # try an auth'ed request to make sure we have a valid token
         # note this requires the token to have read on user
