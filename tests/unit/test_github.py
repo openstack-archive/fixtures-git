@@ -75,3 +75,16 @@ class TestGithubRepoFixture(testtools.TestCase):
             gh_repo.repo_name.split('-')[-1],
             testtools.matchers.MatchesRegex('[a-f0-9]{8}')
         )
+
+    @mock.patch('fixtures_git.github._login',
+                mock.Mock(return_value=mock.Mock()))
+    def test_tempname_exact_string(self):
+
+        name = 'my-custom-tmp'
+        gh_repo = gh_fixture.GithubRepoFixture('owner', 'token')
+        gh_repo.repo_name = name
+        gh_repo.setUp()
+        self.assertThat(
+            gh_repo.repo_name,
+            testtools.matchers.Equals(name)
+        )
