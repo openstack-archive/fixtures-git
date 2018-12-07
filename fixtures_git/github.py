@@ -66,11 +66,13 @@ class GithubRepoFixture(GithubLoginMixin, fixtures.Fixture):
 
     def _setUp(self):
 
-        template_parts = iter(self.name_template.split('XXXXXX'))
-        prefix = next(template_parts)
-        suffix = next(template_parts, '')
-        tfile = tempfile.NamedTemporaryFile(suffix=suffix, prefix=prefix)
-        self.repo_name = os.path.basename(tfile.name)
+        # allow user to provide an exact name to use
+        if self.repo_name is None:
+            template_parts = iter(self.name_template.split('XXXXXX'))
+            prefix = next(template_parts)
+            suffix = next(template_parts, '')
+            tfile = tempfile.NamedTemporaryFile(suffix=suffix, prefix=prefix)
+            self.repo_name = os.path.basename(tfile.name)
 
         self.addCleanup(self._delete_repo)
 
