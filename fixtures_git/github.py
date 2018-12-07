@@ -67,20 +67,22 @@ class GithubRepoFixture(GithubLoginMixin, fixtures.Fixture):
 
     def _setUp(self):
 
-        # handle template_name missing 'XXXXX' result in it containing
-        # a single element so set suffix to '' in that case.
-        template_parts = iter(self.name_template.split('XXXXXX'))
-        prefix = next(template_parts)
-        suffix = next(template_parts, '')
+        # allow user to provide an exact name to use
+        if self.repo_name is None:
+            # handle template_name missing 'XXXXX' result in it containing
+            # a single element so set suffix to '' in that case.
+            template_parts = iter(self.name_template.split('XXXXXX'))
+            prefix = next(template_parts)
+            suffix = next(template_parts, '')
 
-        self.repo_name = ''.join(
-            itertools.chain(
-                prefix,
-                (random.choice(string.ascii_uppercase + string.digits)
-                 for _ in range(8)),
-                suffix
+            self.repo_name = ''.join(
+                itertools.chain(
+                    prefix,
+                    (random.choice(string.ascii_uppercase + string.digits)
+                    for _ in range(8)),
+                    suffix
+                )
             )
-        )
 
         self.addCleanup(self._delete_repo)
 
