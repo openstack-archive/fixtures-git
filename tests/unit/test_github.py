@@ -22,7 +22,7 @@ from fixtures_git import github as gh_fixture
 
 class TestGithubRepoFixture(testtools.TestCase):
 
-    @mock.patch('fixtures_git.github.GithubRepoFixture.login',
+    @mock.patch('fixtures_git.github._login',
                 mock.Mock(return_value=mock.Mock()))
     def test_tempname_default(self):
 
@@ -37,7 +37,7 @@ class TestGithubRepoFixture(testtools.TestCase):
             testtools.matchers.NotEquals('workflow-test-')
         )
 
-    @mock.patch('fixtures_git.github.GithubRepoFixture.login',
+    @mock.patch('fixtures_git.github._login',
                 mock.Mock(return_value=mock.Mock()))
     def test_tempname_custom(self):
 
@@ -54,7 +54,7 @@ class TestGithubRepoFixture(testtools.TestCase):
             testtools.matchers.EndsWith(template.split('XXXXXX')[1])
         )
 
-    @mock.patch('fixtures_git.github.GithubRepoFixture.login',
+    @mock.patch('fixtures_git.github._login',
                 mock.Mock(return_value=mock.Mock()))
     def test_tempname_no_suffix_in_template(self):
 
