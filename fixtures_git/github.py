@@ -28,20 +28,18 @@ except ImportError:
 TEST_REPO_DESC = "########## Auto-generated test repository ##########"
 
 
-class GithubLoginMixin(object):
+def _login(self, token, url=None):
 
-    def login(self, token, url=None):
+    if url is None:
+        url = "https://github.com"
 
-        if url is None:
-            url = "https://github.com"
-
-        if parse.urlparse(url).netloc == "github.com":
-            return github.login(token=token)
-        else:
-            return github.enterprise_login(token=token, url=url)
+    if parse.urlparse(url).netloc == "github.com":
+        return github.login(token=token)
+    else:
+        return github.enterprise_login(token=token, url=url)
 
 
-class GithubRepoFixture(GithubLoginMixin, fixtures.Fixture):
+class GithubRepoFixture(fixtures.Fixture):
     """
     Fixture to create a new repo in GitHub and remove once finished.
     """
@@ -58,8 +56,7 @@ class GithubRepoFixture(GithubLoginMixin, fixtures.Fixture):
         self.repo = None
         self.repo_name = None
 
-        # use GithubLoginMixin
-        self.github = self.login(token, url)
+        self.github = _login(token, url)
 
         # try an auth'ed request to make sure we have a valid token
         # note this requires the token to have read on user
@@ -95,7 +92,7 @@ class GithubRepoFixture(GithubLoginMixin, fixtures.Fixture):
                 repo.delete()
 
 
-class GithubForkedRepoFixture(GithubLoginMixin, fixtures.Fixture):
+class GithubForkedRepoFixture(fixtures.Fixture):
     """
     Fixture to create and delete a fork of the given repo in the
     default GitHub org of the token user
@@ -108,8 +105,7 @@ class GithubForkedRepoFixture(GithubLoginMixin, fixtures.Fixture):
 
         self.repo = None
 
-        # use GithubLoginMixin
-        self.github = self.login(token, url)
+        self.github = _login(token, url)
 
         # try an auth'ed request to make sure we have a valid token
         # note this requires the token to have read on user
