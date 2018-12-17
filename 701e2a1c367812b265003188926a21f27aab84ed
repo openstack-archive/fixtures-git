@@ -1,0 +1,8 @@
+Code-Review+2: Darragh Bailey (electrofelix) <daragh.bailey@gmail.com>
+Workflow+1: Darragh Bailey (electrofelix) <daragh.bailey@gmail.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Mon, 17 Dec 2018 17:26:30 +0000
+Reviewed-on: https://review.openstack.org/623481
+Project: openstack/fixtures-git
+Branch: refs/heads/master
