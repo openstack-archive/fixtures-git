@@ -1,0 +1,9 @@
+Code-Review+2: Manuel Desbonnet <mdes@hpe.com>
+Code-Review+1: Arne Luehrs <arne.luehrs@gmail.com>
+Workflow+1: Darragh Bailey (electrofelix) <daragh.bailey@gmail.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Mon, 17 Dec 2018 16:18:31 +0000
+Reviewed-on: https://review.openstack.org/624735
+Project: openstack/fixtures-git
+Branch: refs/heads/master
