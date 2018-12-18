@@ -26,7 +26,7 @@ except ImportError:
 TEST_REPO_DESC = "########## Auto-generated test repository ##########"
 
 
-def _login(self, token, url=None):
+def _login(token, url=None):
 
     if url is None:
         url = "https://github.com"

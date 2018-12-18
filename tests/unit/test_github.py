@@ -20,6 +20,20 @@ import testtools
 from fixtures_git import github as gh_fixture
 
 
+class TestGithubLogin(testtools.TestCase):
+
+    @mock.patch('fixtures_git.github.github.enterprise_login',
+                autospec=True)
+    def test_enterprise_login(self, mock_github_login):
+        """Test that correct list of arguments passed"""
+        gh_fixture._login('my_api_token', url="https://github.company.com")
+
+    @mock.patch('fixtures_git.github.github.login', autospec=True)
+    def test_default_login(self, mock_github_login):
+        """Test that correct list of arguments passed"""
+        gh_fixture._login('my_api_token')
+
+
 class TestGithubRepoFixture(testtools.TestCase):
 
     @mock.patch('fixtures_git.github._login',
