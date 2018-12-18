@@ -1,0 +1,10 @@
+Code-Review+1: Antoni Dabek <antoni.dabek@hpe.com>
+Code-Review+1: Arne Luehrs <arne.luehrs@gmail.com>
+Code-Review+2: Darragh Bailey (electrofelix) <daragh.bailey@gmail.com>
+Workflow+1: Darragh Bailey (electrofelix) <daragh.bailey@gmail.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Tue, 18 Dec 2018 18:29:33 +0000
+Reviewed-on: https://review.openstack.org/625946
+Project: openstack/fixtures-git
+Branch: refs/heads/master
