@@ -84,7 +84,7 @@ test suite that will run on proposed patchsets.
 Support
 -------
 
-Is via the git-upstream_ community which is is found on the
+Is via the git-upstream_ community which is found on the
 `#git-upstream channel on chat.freenode.net
 <irc://chat.freenode.net/#git-upstream>`_
 
